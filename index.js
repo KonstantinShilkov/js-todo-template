@@ -1,8 +1,5 @@
-// 1 Tast add new task
 
-// const ul = document.getElementById('tasklist');
 const ul = document.querySelector('.todo-list')
-// найти по классу и убрать id ?
 
 function createListItem(item) {
 
@@ -18,10 +15,10 @@ function createListItem(item) {
     input.setAttribute('type','checkbox'); 
     button.setAttribute('class','destroy');
 
-// соединяем с объектом
-    label.textContent = item.text; //взял текст контект так как innerHTML вносится с тегами и перезаписвает код, а textContent только добавляет текст
+
+    label.textContent = item.text; 
     li.setAttribute('id',item.id );
-    // li.setAttribute('class', item.completed); пока что не нужно , при подтверждении выполнения дела
+    // li.setAttribute('class', item.completed); 
 
     ul.append(li);
     li.append(div);
