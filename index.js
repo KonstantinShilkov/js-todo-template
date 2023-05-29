@@ -42,10 +42,18 @@ function createListItem(item) {
 
 function renderTasks() {
 
-    // for (const tasks of tasksList.values (tasksList)){
-    //     createListItem(tasks)
+    // нашел пару разных вариантов, первый и третий как буд то одинаковые? До конца не понимаю есть ли разница между всеми?
+
+    // *1     for (const tasks of tasksList.values (tasksList)){
+    //         createListItem(tasks)
     // };
-    Object.values(tasksList).forEach(tasks => createListItem(tasks));
+
+    // * 2     Object.values(tasksList).forEach(tasks => createListItem(tasks));
+
+  //* 3 Наверное этот самый понятный и простой для перебора
+    for (const tasks of tasksList){
+        createListItem(tasks)
+    }
 };
 
 renderTasks();
