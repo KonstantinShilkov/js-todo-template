@@ -18,7 +18,7 @@ function createListItem(item) {
     label.textContent = item.text; 
     li.setAttribute('id',item.id );
     
-    const cond = item.completed == true? "completed" : "" ; //Добавил проверку , чтоб присваивать class = completed или "пустоту" (true/false ) и строка закчеркивалась или нет
+    const cond = item.completed == true? "completed" : "" ; 
     li.setAttribute('class',cond); 
 
     ul.append(li);
@@ -42,18 +42,8 @@ function createListItem(item) {
 
 function renderTasks() {
 
-    // нашел пару разных вариантов, первый и третий как буд то одинаковые? До конца не понимаю есть ли разница между всеми?
+Object.values(tasksList).forEach(tasks => createListItem(tasks));
 
-    // *1     for (const tasks of tasksList.values (tasksList)){
-    //         createListItem(tasks)
-    // };
-
-    // * 2     Object.values(tasksList).forEach(tasks => createListItem(tasks));
-
-  //* 3 Наверное этот самый понятный и простой для перебора
-    for (const tasks of tasksList){
-        createListItem(tasks)
-    }
 };
 
 renderTasks();
