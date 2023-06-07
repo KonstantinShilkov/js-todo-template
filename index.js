@@ -2,7 +2,6 @@
 const ul = document.querySelector('.todo-list');
 const input = document.querySelector('.new-todo');
 
-
 function createListItem(item) {
 
     const li  = document.createElement('li');
@@ -16,7 +15,6 @@ function createListItem(item) {
     input.setAttribute('type','checkbox'); 
     button.setAttribute('class','destroy');
 
-
     label.textContent = item.text; 
     li.setAttribute('id',item.id );
     
@@ -28,22 +26,17 @@ function createListItem(item) {
     div.append(input);
     div.append(label);
     div.append(button);
-
 };
 
 function renderTasks() {
-    ul.innerHTML = ''; 
-    
+    ul.innerHTML = '';    
     Object.values(tasksList).forEach(tasks => createListItem(tasks));
- 
 };
 
 let tasksList = [];
 const tasksStore = localStorage.getItem('mylist');
-
 tasksStore == null? tasksList = [] : tasksList = JSON.parse(tasksStore);
 
-    
 input.addEventListener('keydown', e => e.key === 'Enter' && createNewTask());
 // event к input ( положить туда функцию); проверить в консоле event
 
@@ -59,19 +52,16 @@ function getId() {
 
 function createNewTask() {
     const newTask = input.value;
+
     if (newTask !== ""|| null) {
        tasksList.push({id: getId(), text: newTask, completed: false });
        localStorage.setItem('mylist', JSON.stringify(tasksList));
-       //
        cleanInput();
        renderTasks()
-    //    inputTasks();
     };
-    
 };
 
 renderTasks();
 
-// localStorage.clear(tasksList);
    
     
