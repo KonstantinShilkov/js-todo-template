@@ -1,5 +1,7 @@
 
-const ul = document.querySelector('.todo-list')
+const ul = document.querySelector('.todo-list');
+const input = document.querySelector('.new-todo');
+
 
 function createListItem(item) {
 
@@ -29,21 +31,47 @@ function createListItem(item) {
 
 };
 
- const tasksList = [
-     { id: "1", text: "выучить html", completed: true },
-     { id: "2", text: "выучить css", completed: true },
-     { id: "3", text: "выучить js", completed: false },
-     { id: "4", text: "выучить фреймворк", completed: false },
-     { id: "5", text: "написать несколько учебных проектов", completed: false },
-     { id: "6", text: "пройти собеседование", completed: false },
-     { id: "7", text: "получить работу", completed: false }
- ];
-    
-
 function renderTasks() {
+    ul.innerHTML = ''; 
+    
+    Object.values(tasksList).forEach(tasks => createListItem(tasks));
+ 
+};
 
-Object.values(tasksList).forEach(tasks => createListItem(tasks));
+let tasksList = [];
+const tasksStore = localStorage.getItem('mylist');
 
+tasksStore == null? tasksList = [] : tasksList = JSON.parse(tasksStore);
+
+    
+input.addEventListener('keydown', e => e.key === 'Enter' && createNewTask());
+// event к input ( положить туда функцию); проверить в консоле event
+
+function cleanInput() {
+    input.value = "";
+};
+
+function getId() {
+    const newId = tasksList.length + 1;
+    // поискать уникальнй id кроме length
+    return newId
+};
+
+function createNewTask() {
+    const newTask = input.value;
+    if (newTask !== ""|| null) {
+       tasksList.push({id: getId(), text: newTask, completed: false });
+       localStorage.setItem('mylist', JSON.stringify(tasksList));
+       //
+       cleanInput();
+       renderTasks()
+    //    inputTasks();
+    };
+    
 };
 
 renderTasks();
+
+// localStorage.clear(tasksList);
+   
+    
