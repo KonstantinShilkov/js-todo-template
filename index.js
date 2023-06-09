@@ -38,23 +38,28 @@ const tasksStore = localStorage.getItem('mylist');
 tasksStore == null? tasksList = [] : tasksList = JSON.parse(tasksStore);
 
 input.addEventListener('keydown', e => e.key === 'Enter' && createNewTask());
-// event к input ( положить туда функцию); проверить в консоле event
 
 function cleanInput() {
     input.value = "";
 };
 
-function getId() {
-    const newId = tasksList.length + 1;
-    // поискать уникальнй id кроме length
-    return newId
+function randomId(min, max) {
+    let rand = min + Math.random() * (max + 1 - min);
+    const newId = Math.floor(rand);
+    let result = tasksList.map(item => item.id);
+    let check = result.find(item=>item.id = newId);    
+    if (check == true) {
+        randomId(min, max);
+    } else {
+        return newId;
+    };
 };
 
 function createNewTask() {
     const newTask = input.value;
 
     if (newTask !== ""|| null) {
-       tasksList.push({id: getId(), text: newTask, completed: false });
+    tasksList.push({id: randomId(1 , 10000), text: newTask, completed: false });
        localStorage.setItem('mylist', JSON.stringify(tasksList));
        cleanInput();
        renderTasks()
@@ -62,6 +67,7 @@ function createNewTask() {
 };
 
 renderTasks();
+
 
    
     
