@@ -1,5 +1,6 @@
 
-const ul = document.querySelector('.todo-list')
+const ul = document.querySelector('.todo-list');
+const input = document.querySelector('.new-todo');
 
 function createListItem(item) {
 
@@ -14,11 +15,10 @@ function createListItem(item) {
     input.setAttribute('type','checkbox'); 
     button.setAttribute('class','destroy');
 
-
     label.textContent = item.text; 
     li.setAttribute('id',item.id );
     
-    const cond = item.completed == true? "completed" : "" ; //Добавил проверку , чтоб присваивать class = completed или "пустоту" (true/false ) и строка закчеркивалась или нет
+    const cond = item.completed == true? "completed" : "" ; 
     li.setAttribute('class',cond); 
 
     ul.append(li);
@@ -26,34 +26,47 @@ function createListItem(item) {
     div.append(input);
     div.append(label);
     div.append(button);
-
 };
 
- const tasksList = [
-     { id: "1", text: "выучить html", completed: true },
-     { id: "2", text: "выучить css", completed: true },
-     { id: "3", text: "выучить js", completed: false },
-     { id: "4", text: "выучить фреймворк", completed: false },
-     { id: "5", text: "написать несколько учебных проектов", completed: false },
-     { id: "6", text: "пройти собеседование", completed: false },
-     { id: "7", text: "получить работу", completed: false }
- ];
-    
-
 function renderTasks() {
+    ul.innerHTML = '';    
+    Object.values(tasksList).forEach(tasks => createListItem(tasks));
+};
 
-    // нашел пару разных вариантов, первый и третий как буд то одинаковые? До конца не понимаю есть ли разница между всеми?
+const tasksStore = localStorage.getItem('mylist');
+const tasksList = tasksStore === null? []: JSON.parse(tasksStore)
 
-    // *1     for (const tasks of tasksList.values (tasksList)){
-    //         createListItem(tasks)
-    // };
+input.addEventListener('keydown', e => e.key === 'Enter' && createNewTask());
 
-    // * 2     Object.values(tasksList).forEach(tasks => createListItem(tasks));
+function cleanInput() {
+    input.value = "";
+};
 
-  //* 3 Наверное этот самый понятный и простой для перебора
-    for (const tasks of tasksList){
-        createListItem(tasks)
-    }
+function randomId(min, max) {
+    const rand = min + Math.random() * (max + 1 - min);
+    const newId = Math.floor(rand);
+    const ids = tasksList.map(task => task.id);
+    const isNewIdExists = ids.includes(newId);    
+    if (isNewIdExists === true) {
+        randomId(min, max);
+    } else {
+        return newId;
+    };
+};
+
+function createNewTask() {
+    const newTask = input.value;
+
+    if (newTask !== ""|| null) {
+    tasksList.push({id: randomId(1 , 10000), text: newTask, completed: false });
+       localStorage.setItem('mylist', JSON.stringify(tasksList));
+       cleanInput();
+       renderTasks()
+    };
 };
 
 renderTasks();
+
+
+   
+    
