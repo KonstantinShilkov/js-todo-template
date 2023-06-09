@@ -33,9 +33,8 @@ function renderTasks() {
     Object.values(tasksList).forEach(tasks => createListItem(tasks));
 };
 
-let tasksList = [];
 const tasksStore = localStorage.getItem('mylist');
-tasksStore == null? tasksList = [] : tasksList = JSON.parse(tasksStore);
+const tasksList = tasksStore === null? []: JSON.parse(tasksStore)
 
 input.addEventListener('keydown', e => e.key === 'Enter' && createNewTask());
 
@@ -44,11 +43,11 @@ function cleanInput() {
 };
 
 function randomId(min, max) {
-    let rand = min + Math.random() * (max + 1 - min);
+    const rand = min + Math.random() * (max + 1 - min);
     const newId = Math.floor(rand);
-    let result = tasksList.map(item => item.id);
-    let check = result.find(item=>item.id = newId);    
-    if (check == true) {
+    const ids = tasksList.map(task => task.id);
+    const isNewIdExists = ids.includes(newId);    
+    if (isNewIdExists === true) {
         randomId(min, max);
     } else {
         return newId;
