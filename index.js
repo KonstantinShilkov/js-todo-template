@@ -1,8 +1,5 @@
 
 const ul = document.querySelector('.todo-list');
-const input = document.querySelector('.new-todo');
-
-
 
 function createListItem(item) {
 
@@ -34,10 +31,14 @@ function createListItem(item) {
 function renderTasks() {
     ul.innerHTML = '';    
     Object.values(tasksList).forEach(tasks => createListItem(tasks));
+    
 };
 
 const tasksStore = localStorage.getItem('mylist');
 const tasksList = tasksStore === null? []: JSON.parse(tasksStore)
+renderTasks();
+
+const input = document.querySelector('.new-todo');
 
 input.addEventListener('keydown', e => e.key === 'Enter' && createNewTask());
 
@@ -65,39 +66,37 @@ function createNewTask() {
        localStorage.setItem('mylist', JSON.stringify(tasksList));
        cleanInput();
        renderTasks();
-    };
+    };    
 };
 
-renderTasks();
+// const deleteButtonsArray = document.querySelectorAll('.destroy'); 
+const deleteButtonsCollection = document.getElementsByClassName('destroy');
 
-const deleteButtons = document.querySelectorAll('.destroy'); // рассказать как я не мог получить колекцию node =)))
-   
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', function deleteTask (){
-           
-             // const clickedButtonId = button.parentNode.parentNode.dataset.id
-            console.log(tasksList)
-        
-            const clickedButton = button.parentNode.parentNode
-            clickedButton.remove()
-            const clickedButtonId = button.parentNode.parentNode.dataset.id
-            const clickedButtonIndex = tasksList.findIndex(task => task.id == clickedButtonId);
-            console.log(clickedButtonIndex)
-            tasksList.splice(clickedButtonIndex,1);
-            localStorage.setItem('mylist', JSON.stringify(tasksList));
-        
-            // console.log(clickedButton)
-            // console.log(clickedButtonId)
-            // console.log(clickedButtonIndex)
-            // console.log(clickedLi)
-
-
-
-
-            //   const clickedLi = clickedButton.parentNode.parentNode
-            //   const clickedId = console.log(clickedLi)
-
-
-        });
-
-    })
+// const deleteButtonsCollection = Array.prototype.slice.call(deleteButtons);
+const deleteButtonsArray = Array.from(deleteButtonsCollection);
+    
+deleteButtonsArray.forEach(button => {
+    button.addEventListener('click', function (){
+        const clickedTask = button.parentNode.parentNode;
+        clickedTask.remove();
+        const clickedTaskId = button.parentNode.parentNode.dataset.id;
+        const clickedTaskIndex = tasksList.findIndex(task => task.id == clickedTaskId);
+        tasksList.splice(clickedTaskIndex,1);
+        localStorage.setItem('mylist', JSON.stringify(tasksList));
+    });
+});
+    // function deleteTask () {
+    //     dinamoArray().forEach(button => {
+    //             button.addEventListener('click', function() {
+    //                 const clickedTask = button.parentNode.parentNode
+    //                 clickedTask.remove()
+    //                 const clickedTaskId = button.parentNode.parentNode.dataset.id
+    //                 const clickedTaskIndex = tasksList.findIndex(task => task.id == clickedTaskId);
+    //                 console.log(clickedTaskIndex)
+    //                 tasksList.splice(clickedTaskIndex,1);
+    //                 localStorage.setItem('mylist', JSON.stringify(tasksList));
+                
+    //             });
+    //         });
+    // };
+// 
