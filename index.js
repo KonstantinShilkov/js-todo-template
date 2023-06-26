@@ -75,17 +75,22 @@ function deleteTask (taskId) {
     renderTasks();
 };
 
+// function changeTaskStatus(taskId) {
+//     tasksList = tasksList.map( task=> {
+//             if(task.id === taskId ){
+//              task.completed = !task.completed
+//              return task
+//                 // return {...task , completed: !task.completed}
+//             };    
+//             return task
+//     });  
+
+//     renderTasks();
+// };
+
+
 function changeTaskStatus(taskId) {
-    tasksList = tasksList.map( task=> {
-        if (task.id != taskId) {
-        return task;
-        } else {
-            if(task.id = taskId ){
-             task.completed = task.completed? false: true;
-                return task;
-            };
-        };
-    });
+    tasksList = tasksList.map( task => {if (task.id === taskId) {return {...task, completed: !task.completed}} return task});
     renderTasks();
 };
 
