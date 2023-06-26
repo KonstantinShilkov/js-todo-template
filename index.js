@@ -1,8 +1,8 @@
-
 const ul = document.querySelector('.todo-list');
 const input = document.querySelector('.new-todo');
 const tasksStore = localStorage.getItem('mylist');
 let tasksList = tasksStore === null? []: JSON.parse(tasksStore)
+
 
 function createListItem(task) {
 
@@ -16,19 +16,23 @@ function createListItem(task) {
     input.setAttribute('class','toggle');
     input.setAttribute('type','checkbox'); 
     button.setAttribute('class','destroy');
-    button.onclick =  ()=> deleteTask(task.id)
-
-    label.textContent = task.text; 
-    li.setAttribute('id',task.id );
+    button.onclick =  ()=> deleteTask(task.id);
+    input.onchange = () => changeTaskStatus(task.id);
     
-    const cond = task.completed == true? "completed" : "" ; 
+    input.checked = task.completed;
+    const cond = task.completed ? "completed" : "" ; 
     li.setAttribute('class',cond); 
+    label.textContent = task.text;
+    li.setAttribute('id',task.id );
+       
+
 
     ul.append(li);
     li.append(div);
     div.append(input);
     div.append(label);
     div.append(button);
+
 };
 
 function renderTasks() {
@@ -59,7 +63,7 @@ function createNewTask() {
     const newTask = input.value;
 
     if (newTask !== ""|| null) {
-       tasksList.push({id: randomId(1 , 10000), text: newTask, completed: false });
+       tasksList.push({id: randomId(1 , 10000), text: newTask, completed:false });
        cleanInput();
        renderTasks();
     };    
@@ -67,6 +71,26 @@ function createNewTask() {
 renderTasks();
 
 function deleteTask (taskId) {
-    tasksList = tasksList.filter(tasksId => tasksId.id != taskId);
+    tasksList = tasksList.filter(task => task.id != taskId);
     renderTasks();
 };
+
+// function changeTaskStatus(taskId) {
+//     tasksList = tasksList.map( task=> {
+//             if(task.id === taskId ){
+//              task.completed = !task.completed
+//              return task
+//                 // return {...task , completed: !task.completed}
+//             };    
+//             return task
+//     });  
+
+//     renderTasks();
+// };
+
+
+function changeTaskStatus(taskId) {
+    tasksList = tasksList.map( task => {if (task.id === taskId) {return {...task, completed: !task.completed}} return task});
+    renderTasks();
+};
+
