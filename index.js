@@ -6,9 +6,10 @@ const footerStatus = document.querySelector('.footer');
 const itemsLeft = document.querySelector('.todo-count');
 const ulFilters = document.querySelector('.filters');
 const clearCompletedButton = document.querySelector('.clear-completed');
-// const tasksListActive = tasksList.filter(task => !task.completed);
-// const tasksListCompleted = tasksList.filter(task => task.completed);
-
+// const isAll = filter;
+// const isActive = filter;
+// const isCompleted = filter;
+// let filteredList = tasksList;
 function createListItem(task) {
 
     const li  = document.createElement('li');
@@ -39,8 +40,23 @@ function createListItem(task) {
 };
 
 function renderTasks(currentTasksList) {
-        ul.innerHTML = '';    
-        currentTasksList.forEach(tasks => createListItem(tasks));
+
+        ul.innerHTML = '';
+        const url = window.location.href;
+        let filteredList = currentTasksList;
+
+        if(url.includes("active")){
+            filteredList = tasksList.filter(task => !task.completed);
+            setFilterAttributes("active")
+        } else
+        if(url.includes("completed")) {
+            setFilterAttributes("completed")
+            filteredList = tasksList.filter(task => task.completed);
+        } else 
+        setFilterAttributes("all")
+
+        filteredList.forEach(tasks => createListItem(tasks));
+        // currentTasksList.forEach(tasks => createListItem(tasks));
         localStorage.setItem('mylist', JSON.stringify(tasksList));  
         checkFilters();
         countActiveTasks();
@@ -57,16 +73,16 @@ function renderTasks(currentTasksList) {
     //     else (filterAllSelected(),renderTasks(tasksList))
     };
     
-function renderTasksByUrl() {
-    const url = window.location.href;
-    if(url.includes("active")){
-        setFilterAttributes("active")
-    } else
-    if(url.includes("completed")) {
-        setFilterAttributes("completed")
-    } else
-    setFilterAttributes("all")
-};
+// function renderTasksByUrl() {
+//     const url = window.location.href;
+//     if(url.includes("active")){
+//         setFilterAttributes("active")
+//     } else
+//     if(url.includes("completed")) {
+//         setFilterAttributes("completed")
+//     } else
+//     setFilterAttributes("all")
+// };
 
 
 input.addEventListener('keydown', e => e.key === 'Enter' && createNewTask());
@@ -93,8 +109,8 @@ function createNewTask() {
     if (newTask !== ""|| null) {
        tasksList.push({id: randomId(1 , 10000), text: newTask, completed:false });
        cleanInput();
-       renderTasksByUrl()
-    //    renderTasks(tasksList);
+    //    renderTasksByUrl()
+       renderTasks(tasksList);
     };    
 };
 // renderTasks(tasksList);
@@ -102,15 +118,15 @@ function createNewTask() {
 function deleteTask (taskId) {
     tasksList = tasksList.filter(task => task.id != taskId);
     checkFilters();
-    renderTasksByUrl()
-    // renderTasks(tasksList);
+    // renderTasksByUrl()
+    renderTasks(tasksList);
 
 };
 
 function changeTaskStatus(taskId) {
     tasksList = tasksList.map( task => {if (task.id === taskId) {return {...task, completed: !task.completed}} return task});
-    // renderTasks(tasksList);
-    renderTasksByUrl()
+    renderTasks(tasksList);
+    // renderTasksByUrl()
 };
 
 function checkFilters() {
@@ -124,25 +140,25 @@ function countActiveTasks(){
 
 
 function setFilterAttributes(filter) {
-    let filteredList = tasksList;
+    // let filteredList = tasksList;
 
-    const isAll = filter === "all"
-    const isActive = filter === "active";
-    const isCompleted = filter === "completed";
+   const isAll = filter === "all"
+   const isActive = filter === "active";
+   const isCompleted = filter === "completed";
 
     ulFilters.children[0].children[0].setAttribute("class",isAll? "selected": "");
     ulFilters.children[1].children[0].setAttribute("class",isActive? "selected": "");
     ulFilters.children[2].children[0].setAttribute("class",isCompleted? "selected": "");
 
-    if (isActive) {
-        filteredList = tasksList.filter(task => !task.completed);
-    };
+//     // if (isActive) {
+//     //     filteredList = tasksList.filter(task => !task.completed);
+//     // };
 
-    if (isCompleted) {
-        filteredList = tasksList.filter(task => task.completed);
-    }
-
-    renderTasks(filteredList)
+//     // if (isCompleted) {
+//     //     filteredList = tasksList.filter(task => task.completed);
+//     // }
+//     // renderTasks(tasksList)
+//     // renderTasks(filteredList)
 
 };
 
@@ -159,26 +175,8 @@ function checkClearCompleted() {
 function deleteCompletedTasks() {
     tasksList = tasksList.filter(task => !task.completed);
     // renderTasksByUrl()
-    // renderTasks(tasksList);
-    renderTasksByUrl()
+    renderTasks(tasksList);
+    // renderTasksByUrl()
 };
-renderTasksByUrl()
-
-
-
-// function urlCheck (filter) {
-//     let filteredList = tasksList;
-
-//     const isActive = filter === "active";
-//     const isCompleted = filter === "completed";
-
-//     if (isActive) {
-//         filteredList = tasksList.filter(task => !task.completed);
-//     };
-
-//     if (isCompleted) {
-//         filteredList = tasksList.filter(task => task.completed);
-//     }
-
-//     renderTasks(filteredList);
-// }
+// renderTasksByUrl()
+renderTasks(tasksList)
