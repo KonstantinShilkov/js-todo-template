@@ -6,10 +6,8 @@ const footerStatus = document.querySelector('.footer');
 const itemsLeft = document.querySelector('.todo-count');
 const ulFilters = document.querySelector('.filters');
 const clearCompletedButton = document.querySelector('.clear-completed');
-// const isAll = filter;
-// const isActive = filter;
-// const isCompleted = filter;
-// let filteredList = tasksList;
+const filter = getFilter();
+
 function createListItem(task) {
 
     const li  = document.createElement('li');
@@ -36,55 +34,31 @@ function createListItem(task) {
     div.append(input);
     div.append(label);
     div.append(button);
-
 };
 
-function renderTasks(currentTasksList) {
+function renderTasks(currentTasksList,filter) {
 
         ul.innerHTML = '';
-        const url = window.location.href;
-        let filteredList = currentTasksList;
-
-        if(url.includes("active")){
+        let filteredList = [...currentTasksList];
+        
+        if(filter === "active"){
             filteredList = tasksList.filter(task => !task.completed);
-            setFilterAttributes("active")
+            setFilterAttributes("active");
         } else
-        if(url.includes("completed")) {
-            setFilterAttributes("completed")
+        if(filter === "completed") {
+            setFilterAttributes("completed");
             filteredList = tasksList.filter(task => task.completed);
-        } else 
-        setFilterAttributes("all")
+        } else {
+        setFilterAttributes("all");
+        }
 
         filteredList.forEach(tasks => createListItem(tasks));
-        // currentTasksList.forEach(tasks => createListItem(tasks));
         localStorage.setItem('mylist', JSON.stringify(tasksList));  
         checkFilters();
         countActiveTasks();
         checkClearCompleted();
-       
-    //     if (url.includes("active")){
-    //         filterActiveSelected()
-    //         renderTasks(tasksListActive);
-    //     } else 
-    //         if (url.includes("completed")){
-    //             filterCompletedSelected()
-    //             renderTasks(tasksListCompleted);
-    //     } 
-    //     else (filterAllSelected(),renderTasks(tasksList))
     };
     
-// function renderTasksByUrl() {
-//     const url = window.location.href;
-//     if(url.includes("active")){
-//         setFilterAttributes("active")
-//     } else
-//     if(url.includes("completed")) {
-//         setFilterAttributes("completed")
-//     } else
-//     setFilterAttributes("all")
-// };
-
-
 input.addEventListener('keydown', e => e.key === 'Enter' && createNewTask());
 
 function cleanInput() {
@@ -109,24 +83,23 @@ function createNewTask() {
     if (newTask !== ""|| null) {
        tasksList.push({id: randomId(1 , 10000), text: newTask, completed:false });
        cleanInput();
-    //    renderTasksByUrl()
-       renderTasks(tasksList);
+       const filter = getFilter();
+       renderTasks(tasksList,filter);
     };    
 };
-// renderTasks(tasksList);
 
 function deleteTask (taskId) {
     tasksList = tasksList.filter(task => task.id != taskId);
     checkFilters();
-    // renderTasksByUrl()
-    renderTasks(tasksList);
+    const filter = getFilter();
+    renderTasks(tasksList,filter);
 
 };
 
 function changeTaskStatus(taskId) {
     tasksList = tasksList.map( task => {if (task.id === taskId) {return {...task, completed: !task.completed}} return task});
-    renderTasks(tasksList);
-    // renderTasksByUrl()
+    const filter = getFilter();
+    renderTasks(tasksList,filter);
 };
 
 function checkFilters() {
@@ -138,10 +111,8 @@ function countActiveTasks(){
     itemsLeft.firstChild.textContent = tasksListActive.length;
 };
 
-
 function setFilterAttributes(filter) {
-    // let filteredList = tasksList;
-
+   
    const isAll = filter === "all"
    const isActive = filter === "active";
    const isCompleted = filter === "completed";
@@ -149,16 +120,6 @@ function setFilterAttributes(filter) {
     ulFilters.children[0].children[0].setAttribute("class",isAll? "selected": "");
     ulFilters.children[1].children[0].setAttribute("class",isActive? "selected": "");
     ulFilters.children[2].children[0].setAttribute("class",isCompleted? "selected": "");
-
-//     // if (isActive) {
-//     //     filteredList = tasksList.filter(task => !task.completed);
-//     // };
-
-//     // if (isCompleted) {
-//     //     filteredList = tasksList.filter(task => task.completed);
-//     // }
-//     // renderTasks(tasksList)
-//     // renderTasks(filteredList)
 
 };
 
@@ -174,9 +135,19 @@ function checkClearCompleted() {
 
 function deleteCompletedTasks() {
     tasksList = tasksList.filter(task => !task.completed);
-    // renderTasksByUrl()
-    renderTasks(tasksList);
-    // renderTasksByUrl()
+    const filter = getFilter();
+    renderTasks(tasksList,filter);
 };
-// renderTasksByUrl()
-renderTasks(tasksList)
+
+function getFilter(){
+    const url = window.location.href;
+    if (url.includes("active")){
+        return "active";
+    } else
+    if(url.includes("completed")){
+        return "completed";
+    }else
+    return "all";
+}
+
+renderTasks(tasksList,filter)
