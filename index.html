@@ -23,8 +23,24 @@
                     <label for="toggle-all"></label>
                     <ul class="todo-list"></ul>
                 </section>
+                <footer class="footer" style="display: none;">
+                    <span class="todo-count"><strong>0</strong> items left</span>
+                    <ul class="filters">
+                        <li>
+                            <a href="#/" class="selected" onclick = renderTasks(tasksList,"all") >All</a>
+                        </li>
+                        <li>
+                            <a href="#/active" onclick = renderTasks(tasksList,"active")>Active</a>
+                        </li>
+                        <li>
+                            <a href="#/completed" onclick = renderTasks(tasksList,"completed")>Completed</a>
+                        </li>
+                    </ul>
+                    <button class="clear-completed" style="display: none;" onclick = deleteCompletedTasks()></button>
+                </footer>
             </div>
         </section>
+
         <script src="./index.js"></script>
     </body>
 </html>
